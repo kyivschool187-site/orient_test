@@ -1,20 +1,41 @@
 (function () {
-  const tests = window.ORIENT_TESTS || [];
+  const levels = [
+    {
+      id: "pochatkovyi",
+      title: "Початковий",
+      lead: "Знаки, кольори, масштаб, компас, рельєф, простий шлях, легенда, безпека і чесна гра.",
+      tests: window.ORIENT_TESTS || []
+    },
+    {
+      id: "serednii",
+      title: "Середній",
+      lead: "Слова дистанції, точне місце, легенда, рельєф, спринт і порядок пунктів.",
+      tests: window.ORIENT_MIDDLE || []
+    },
+    {
+      id: "ekspert",
+      title: "Експерт",
+      lead: "Схожі знаки, повернення на точку, атака пункту, довгий варіант і рельєф без чисел.",
+      tests: window.ORIENT_EXPERT || []
+    }
+  ];
+  const allTests = levels.reduce(function (list, level) { return list.concat(level.tests); }, []);
   const figures = window.ORIENT_FIGURES;
   const app = document.getElementById("app");
   const historySlot = document.getElementById("history-slot");
   const STORE = "orientuvannia-testy-v1";
 
-  const view = { name: "home", testId: null, index: 0, phase: "answer", picks: [], correct: 0 };
+  const view = { name: "levels", levelId: null, testId: null, index: 0, phase: "answer", picks: [], correct: 0 };
 
   function loadStore() {
     try {
       const raw = localStorage.getItem(STORE);
-      const data = raw ? JSON.parse(raw) : { attempts: [] };
-      if (!data || !Array.isArray(data.attempts)) return { attempts: [] };
+      const data = raw ? JSON.parse(raw) : { attempts: [], best: {} };
+      if (!data || !Array.isArray(data.attempts)) return { attempts: [], best: {} };
+      if (!data.best || typeof data.best !== "object") data.best = {};
       return data;
     } catch (err) {
-      return { attempts: [] };
+      return { attempts: [], best: {} };
     }
   }
 
@@ -22,6 +43,8 @@
     const data = loadStore();
     data.attempts.unshift(entry);
     data.attempts = data.attempts.slice(0, 30);
+    const prev = data.best[entry.testId];
+    if (typeof prev !== "number" || entry.percent > prev) data.best[entry.testId] = entry.percent;
     try {
       localStorage.setItem(STORE, JSON.stringify(data));
     } catch (err) {
@@ -30,13 +53,32 @@
   }
 
   function bestFor(id) {
-    const scores = loadStore().attempts.filter(function (item) { return item.testId === id; });
-    if (!scores.length) return null;
-    return scores.reduce(function (max, item) { return Math.max(max, item.percent); }, 0);
+    const data = loadStore();
+    let best = typeof data.best[id] === "number" ? data.best[id] : null;
+    data.attempts.forEach(function (item) {
+      if (item.testId !== id || typeof item.percent !== "number") return;
+      best = best == null ? item.percent : Math.max(best, item.percent);
+    });
+    return best;
+  }
+
+  function findLevel(id) {
+    return levels.find(function (item) { return item.id === id; }) || null;
+  }
+
+  function levelOfTest(id) {
+    return levels.find(function (level) {
+      return level.tests.some(function (test) { return test.id === id; });
+    }) || null;
   }
 
   function findTest(id) {
-    return tests.find(function (item) { return item.id === id; }) || null;
+    return allTests.find(function (item) { return item.id === id; }) || null;
+  }
+
+  function levelTests() {
+    const level = findLevel(view.levelId);
+    return level ? level.tests : [];
   }
 
   function percentOf(correct, total) {
@@ -79,20 +121,51 @@
     const list = h("ul", "history");
     attempts.forEach(function (item) {
       const test = findTest(item.testId);
+      const level = levelOfTest(item.testId);
       const li = h("li");
-      li.appendChild(h("span", null, test ? test.title : "Тест"));
+      li.appendChild(h("span", null, (level ? level.title + " · " : "") + (test ? test.title : "Тест")));
       li.appendChild(h("strong", null, item.percent + "%"));
       list.appendChild(li);
     });
     historySlot.appendChild(list);
   }
 
-  function renderHome() {
+  function renderLevels() {
     const block = document.createElement("div");
-    const head = h("h2", null, "Оберіть тест");
-    const note = h("p", "muted", "Кожен тест має кілька питань. Після відповіді одразу видно, чи так, і чому.");
-    block.appendChild(head);
-    block.appendChild(note);
+    block.appendChild(h("h2", null, "Оберіть рівень"));
+    block.appendChild(h("p", "muted", "Кожен рівень має свій список тестів. Найкращий результат пам’ятається окремо для кожного тесту."));
+    const grid = h("div", "level-grid");
+    levels.forEach(function (level) {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "level-card";
+      card.appendChild(h("strong", null, level.title));
+      card.appendChild(h("span", null, level.tests.length + " тестів. " + level.lead));
+      card.addEventListener("click", function () {
+        view.name = "home";
+        view.levelId = level.id;
+        render();
+      });
+      grid.appendChild(card);
+    });
+    block.appendChild(grid);
+    app.replaceChildren(block);
+    renderHistory();
+  }
+
+  function renderHome() {
+    const level = findLevel(view.levelId);
+    const tests = levelTests();
+    const block = document.createElement("div");
+    const back = h("button", "text-btn btn secondary", "Усі рівні");
+    back.type = "button";
+    back.addEventListener("click", function () {
+      view.name = "levels";
+      render();
+    });
+    block.appendChild(back);
+    block.appendChild(h("h2", null, level ? level.title : "Оберіть тест"));
+    block.appendChild(h("p", "muted", "Кожен тест має кілька питань. Після відповіді одразу видно, чи так, і чому."));
     const grid = h("div", "test-grid");
     tests.forEach(function (test, index) {
       const card = h("article", "test-card");
@@ -117,6 +190,8 @@
   }
 
   function startTest(id) {
+    const owner = levelOfTest(id);
+    if (owner) view.levelId = owner.id;
     view.name = "quiz";
     view.testId = id;
     view.index = 0;
@@ -136,6 +211,7 @@
     const pack = current();
     const test = pack.test;
     const question = pack.question;
+    const tests = levelTests();
     const total = test.questions.length;
     const block = document.createElement("div");
 
@@ -321,6 +397,7 @@
 
   function renderResult() {
     const test = findTest(view.testId);
+    const tests = levelTests();
     const total = test.questions.length;
     const correct = view.correct;
     const percent = view.percent;
@@ -370,10 +447,12 @@
   }
 
   function render() {
-    document.title = view.name === "home"
-      ? "Тести з орієнтування — початковий рівень"
-      : findTest(view.testId).title + " — Тести з орієнтування";
-    if (view.name === "home") renderHome();
+    const level = findLevel(view.levelId);
+    if (view.name === "levels") document.title = "Тести з орієнтування";
+    else if (view.name === "home") document.title = (level ? level.title + " — " : "") + "Тести з орієнтування";
+    else document.title = findTest(view.testId).title + " — Тести з орієнтування";
+    if (view.name === "levels") renderLevels();
+    else if (view.name === "home") renderHome();
     else if (view.name === "quiz") renderQuiz();
     else renderResult();
   }

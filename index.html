@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Тести з орієнтування — початковий рівень</title>
-  <meta name="description" content="Чотирнадцять коротких тестів для початківців: знаки карти, кольори, масштаб, компас, горизонталі, варіанти, легенди, безпека і чесна гра.">
+  <title>Тести з орієнтування</title>
+  <meta name="description" content="Три рівні тестів з орієнтування: початковий, середній і експерт. Знаки, компас, рельєф, варіанти, легенди, безпека і чесна гра.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -12,9 +12,9 @@
   <a class="skip" href="#main">Перейти до змісту</a>
   <header class="wrap hero">
     <div class="hero-text">
-      <p class="eyebrow">Початковий рівень</p>
+      <p class="eyebrow">Три рівні</p>
       <h1>Тести з орієнтування</h1>
-      <p class="lede">Чотирнадцять коротких тренувань без входу в обліковий запис. Знаки, кольори, масштаб, компас, рельєф, вибір шляху, легенда пункту, безпека і чесна гра.</p>
+      <p class="lede">Початковий, середній і експерт. Кожен рівень відкриває свій список тестів. Без входу в обліковий запис.</p>
     </div>
     <div class="hero-map" aria-hidden="true">
       <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg">
@@ -46,8 +46,8 @@
     <aside class="sheet side">
       <h2>Як проходити</h2>
       <ol class="steps">
-        <li>Оберіть один тест.</li>
-        <li>Дайте відповідь і одразу побачте пояснення.</li>
+        <li>Оберіть рівень: початковий, середній або експерт.</li>
+        <li>Оберіть тест, дайте відповідь і одразу побачте пояснення.</li>
         <li>Наприкінці буде успішність. Тест можна пройти знову.</li>
       </ol>
       <div id="history-slot"></div>
@@ -59,6 +59,8 @@
     <p>Успішність рахується в браузері й нікуди не надсилається.</p>
   </footer>
   <script src="js/tests.js"></script>
+  <script src="js/tests-middle.js"></script>
+  <script src="js/tests-expert.js"></script>
   <script src="js/figures.js"></script>
   <script src="js/app.js"></script>
 </body>

@@ -130,7 +130,8 @@
       down: "M16 18 C50 20 90 40 124 48",
       up: "M16 48 C50 40 90 20 124 18",
       valley: "M16 18 C40 20 50 48 70 48 C90 48 100 20 124 18",
-      step: "M16 46 H50 V22 H124"
+      step: "M16 46 H50 V22 H124",
+      upflatdown: "M16 48 C36 24 52 20 70 20 H98 C112 20 118 36 128 48"
     };
     el("path", { d: paths[shape] || paths.flat, fill: "none", stroke: "#1f4a38", "stroke-width": 2.4 }, node);
     return node;

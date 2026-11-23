@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Тести з орієнтування — початковий рівень</title>
+  <meta name="description" content="Чотирнадцять коротких тестів для початківців: знаки карти, кольори, масштаб, компас, горизонталі, варіанти, легенди, безпека і чесна гра.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Перейти до змісту</a>
+  <header class="wrap hero">
+    <div class="hero-text">
+      <p class="eyebrow">Початковий рівень</p>
+      <h1>Тести з орієнтування</h1>
+      <p class="lede">Чотирнадцять коротких тренувань без входу в обліковий запис. Знаки, кольори, масштаб, компас, рельєф, вибір шляху, легенда пункту, безпека і чесна гра.</p>
+    </div>
+    <div class="hero-map" aria-hidden="true">
+      <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg">
+        <rect width="640" height="280" fill="#f7f1e4"/>
+        <ellipse cx="250" cy="150" rx="150" ry="78" fill="none" stroke="#8a5a32" stroke-width="1.6"/>
+        <ellipse cx="262" cy="146" rx="96" ry="48" fill="none" stroke="#8a5a32" stroke-width="1.6"/>
+        <ellipse cx="274" cy="142" rx="46" ry="24" fill="none" stroke="#8a5a32" stroke-width="1.6"/>
+        <path d="M40 200 C140 170 180 210 250 190 S390 150 470 176 600 150 630 120" fill="none" stroke="#2c6fbf" stroke-width="3"/>
+        <path d="M30 70 H250" stroke="#1a1a1a" stroke-width="5"/>
+        <path d="M250 70 C300 90 340 40 430 78" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="6 5"/>
+        <rect x="470" y="40" width="90" height="54" fill="#f2d24b"/>
+        <path d="M500 150 C530 130 560 160 590 140 C575 175 530 185 500 150Z" fill="#2f6b34" opacity="0.85"/>
+        <circle cx="150" cy="168" r="5" fill="#1a1a1a"/>
+        <polygon points="78,188 66,210 90,210" fill="none" stroke="#8e2f9b" stroke-width="2.4"/>
+        <circle cx="250" cy="118" r="11" fill="none" stroke="#8e2f9b" stroke-width="2.4"/>
+        <circle cx="430" cy="78" r="11" fill="none" stroke="#8e2f9b" stroke-width="2.4"/>
+        <circle cx="560" cy="58" r="11" fill="none" stroke="#8e2f9b" stroke-width="2.4"/>
+        <circle cx="560" cy="58" r="6" fill="none" stroke="#8e2f9b" stroke-width="2"/>
+        <path d="M78 199 L250 118 L430 78 L560 58" fill="none" stroke="#8e2f9b" stroke-width="1.7"/>
+        <path d="M548 36 V18" stroke="#1f4a38" stroke-width="2"/>
+        <path d="M548 18 L543 26 H553 Z" fill="#b42318"/>
+        <path d="M118 214 V168" stroke="#241c16" stroke-width="1.4"/>
+        <path d="M118 168 L128 180 H108 Z" fill="#e25c12"/>
+        <text x="24" y="28" fill="#5c5146" font-family="Times New Roman, serif" font-size="18">навчальна схема</text>
+      </svg>
+    </div>
+  </header>
+  <main id="main" class="wrap layout">
+    <aside class="sheet side">
+      <h2>Як проходити</h2>
+      <ol class="steps">
+        <li>Оберіть один тест.</li>
+        <li>Дайте відповідь і одразу побачте пояснення.</li>
+        <li>Наприкінці буде успішність. Тест можна пройти знову.</li>
+      </ol>
+      <div id="history-slot"></div>
+    </aside>
+    <div id="app" class="sheet" aria-live="polite"></div>
+  </main>
+  <footer class="wrap site-footer">
+    <p>Схеми вигадані для навчання. Це не фрагменти змагальних карт.</p>
+    <p>Успішність рахується в браузері й нікуди не надсилається.</p>
+  </footer>
+  <script src="js/tests.js"></script>
+  <script src="js/figures.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
